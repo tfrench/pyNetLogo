@@ -228,14 +228,14 @@ class NetLogoLink(object):
                 jpype.startJVM(jvm_home, *jvm_args)
             except RuntimeError as e:
                 raise e
-            
+
             # enable extensions
             if sys.platform == 'darwin':
                 exts = os.path.join(netlogo_home, 'extensions')
             elif sys.platform == 'win32':
-                exts = os.path.join(netlogo_home, 'app', 'extensions')        
+                exts = os.path.join(netlogo_home, 'app', 'extensions')
             else:
-                exts = os.path.join(netlogo_home, 'app', 'extensions')        
+                exts = os.path.join(netlogo_home, 'app', 'extensions')
 
             # check if default extension folder exists, raise
             # a warning otherwise
@@ -246,8 +246,8 @@ class NetLogoLink(object):
                 warnings.warn(('could not find default NetLogo ',
                                'extensions folder. Extensions not ',
                                'available'))
-                
-            
+
+
             if sys.platform == 'darwin':
                 jpype.java.lang.System.setProperty('java.awt.headless',
                                                    'true')
@@ -393,7 +393,7 @@ class NetLogoLink(object):
 
         try:
             extents = self.link.report('(list min-pxcor max-pxcor \
-                                         min-pycor max-pycor)')
+                                         min-pycor max-pycor)'                                                              )
             extents = self._cast_results(extents).astype(int)
 
             results_df = pd.DataFrame(index=range(extents[2],
@@ -403,10 +403,10 @@ class NetLogoLink(object):
             results_df.sort_index(ascending=False, inplace=True)
             if self.netlogo_version == '6':
                 resultsvec = self.link.report('map [p -> [{0}] of p] \
-                                               sort patches'.format(attribute))
+                                               sort patches'                                                            .format(attribute))
             else:
                 resultsvec = self.link.report('map [[{0}] of ?] \
-                                               sort patches'.format(attribute))
+                                               sort patches'                                                            .format(attribute))
             resultsvec = self._cast_results(resultsvec)
             results_df.ix[:, :] = resultsvec.reshape(results_df.shape)
 
@@ -443,12 +443,12 @@ class NetLogoLink(object):
                 command = '(foreach map [px -> [pxcor] of px] \
                             sort patches map [py -> [pycor] of py] \
                             sort patches {0} [[px py p ] -> ask patch px py \
-                            [set {1} p]])'.format(datalist, attribute)
+                            [set {1} p]])'                                          .format(datalist, attribute)
             else:
                 command = '(foreach map [[pxcor] of ?] \
                             sort patches map [[pycor] of ?] \
                             sort patches {0} [ask patch ?1 ?2 \
-                            [set {1} ?3]])'.format(datalist, attribute)
+                            [set {1} ?3]])'                                           .format(datalist, attribute)
 
             self.link.command(command)
 
@@ -555,15 +555,19 @@ class NetLogoLink(object):
                 # Check if the NetLogo reporter returns a list
                 list_res = re.findall(r'\[([^]]*)\]', result)
                 if list_res:
-                    try:
-                        # Try a numerical data type
-                        result = np.array([np.array(e.split(),
-                                           dtype=np.float) for e in list_res])
-                    except:
-                        # Otherwise, assume the reporter returns string values
-                        result = np.array([np.array([b.strip('"')
-                                                     for b in e.split()])
-                                           for e in list_res])
+                    result = np.array([
+                        np.array(
+                            [e for e in result.split("\"") if e.strip() != ''])
+                    ])
+                    # try:
+                    #     # Try a numerical data type
+                    #     result = np.array([np.array(e.split(),
+                    #                        dtype=np.float) for e in list_res])
+                    # except:
+                    #     # Otherwise, assume the reporter returns string values
+                    #     result = np.array([np.array([b.strip('"')
+                    #                                  for b in e.split()])
+                    #                        for e in list_res])
                 else:
                     try:
                         result = np.array([float(entry)
@@ -638,14 +642,14 @@ class NetLogoLink(object):
 
             if self.netlogo_version == '6':
                 commandstr = ['(foreach [{0}] {1} [ [?1 {2}] \
-                               -> ask {3} ?1 [{4}]])'.format(whostr,
+                               -> ask {3} ?1 [{4}]])'                                                     .format(whostr,
                                                              attribstr,
                                                              askstr,
                                                              agent_name,
                                                              setstr)]
             elif self.netlogo_version == '5':
                 commandstr = ['(foreach [{0}] {1} \
-                               [ask {2} ?1 [{3}]])'.format(whostr,
+                               [ask {2} ?1 [{3}]])'                                                   .format(whostr,
                                                            attribstr,
                                                            agent_name,
                                                            setstr)]
