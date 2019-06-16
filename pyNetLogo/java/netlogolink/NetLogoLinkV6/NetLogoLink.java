@@ -131,7 +131,7 @@ public class NetLogoLink {
 						new Runnable() {
 							public void run() {
 								try
-								{ App.app().open(path); }
+								{ App.app().open(path, false); }
 								catch( java.io.IOException ex)
 								{ caughtEx = ex; }
 							} } );
