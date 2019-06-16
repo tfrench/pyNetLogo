@@ -149,7 +149,7 @@ public class NetLogoLink {
 					if (workspace != null)
 						((HeadlessWorkspace)workspace).dispose();
 					workspace = HeadlessWorkspace.newInstance() ;
-					workspace.open(path);
+					workspace.open(path, false);
 				}
 				catch( java.io.IOException ex) {
 					JOptionPane.showMessageDialog(null, "Error in loading model:"+ex, "Error", JOptionPane.OK_CANCEL_OPTION);
